@@ -15,9 +15,7 @@ __author__ = "dougenas"
 import re
 import os
 import shutil
-import subprocess
 import argparse
-import sys
 
 
 def get_special_paths(dir):
@@ -45,7 +43,12 @@ def copy_to(path, files):
 
 
 def zip_to(paths, zippath):
-    print('zip_to', paths, zippath)
+    """Creates zip file from special files"""
+    paths = list(paths)
+    command = "zip -j {} {}".format(zippath, ' '.join(paths))
+    print("Command I'm going to do: ")
+    print(command)
+    os.system(command)
 
 
 def main():
