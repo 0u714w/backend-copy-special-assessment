@@ -10,10 +10,7 @@
 # http://code.google.com/edu/languages/google-python-class/
 
 
-
-
 __author__ = "dougenas"
-
 
 import re
 import os
@@ -23,10 +20,8 @@ import argparse
 import sys
 
 
-__author__ = "dougenas"
-
-
 def get_special_paths(dir):
+    """Manipulate file paths"""
     special_paths = []
     files = os.listdir(dir)
     for file in files:
@@ -35,8 +30,18 @@ def get_special_paths(dir):
     return special_paths
 
 
-def copy_to(paths, dir):
-    print('copy_to', paths, dir)
+def copy_to(path, files):
+    """Copies special files to a directory"""
+    current_dir = os.getcwd()
+    if not os.path.exists(path):
+        create_dir = 'mkdir -p {0}'.format(path)
+        os.system(create_dir)
+    else:
+        print("Path exists")
+
+    for file in files:
+        os.chdir(current_dir)
+        shutil.copy(file, path)
 
 
 def zip_to(paths, zippath):
@@ -51,10 +56,16 @@ def main():
     parser.add_argument('fromdir', help='src dir to look for local files')
     args = parser.parse_args()
 
-    print(args)
+    all_paths = get_special_paths(args.fromdir)
+
+    if args.todir:
+        copy_to(args.todir, all_paths)
+
+    if args.tozip:
+        zip_to(all_paths, os.path.join(os.getcwd(), args.tozip))
 
     if not args.todir and not args.tozip:
-        for file in get_special_paths(args.fromdir):
+        for file in all_paths:
             print(os.path.abspath(file))
 
 
